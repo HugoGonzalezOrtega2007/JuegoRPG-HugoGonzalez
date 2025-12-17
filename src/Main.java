@@ -11,7 +11,7 @@ public class Main {
         while (inicioJuego) {
 
             //LISTAS INICIALES (SE MANTIENEN IGUALES)
-            String[] enemigos = {"Ogro", "Goblin", "Mago oscuro", "Slime"};
+            String[] enemigos = {"Ogro", "Goblin", "Mago oscuro", "Slime", "Caballero", "Principe"};
             String[] recompensas = {"Poción de vida", "Poción magica", "Poción de daño", "Poción de daño extremo"};
             String[] inventario = new String[10];
             String[] interaccion = {"normal", "normal", "normal", "esquivo", "crítico"};
@@ -90,7 +90,6 @@ public class Main {
 
                     //ATAQUE NORMAL USUARIO
                     if (opcion == 1) {
-
                         if (ataque.equals("normal")) {
                             System.out.println("Has realizado un ataque normal y has hecho " + dañoAtaqueNormalUsuario + " de daño al " + enemigoRandom);
                             vidaEnemigo -= dañoAtaqueNormalUsuario;
@@ -103,19 +102,19 @@ public class Main {
                             vidaEnemigo -= dañoAtaqueCriticoUsuario;
                         }
 
-                        //COMPROVACION MUERTE ENEMIGO --ATAQUE NORMAL-- + RECOMPENSAS
+                        //COMPROVACION MUERTE ENEMIGO -- ATAQUE NORMAL -- + RECOMPENSAS
                         if (vidaEnemigo <= 0) {
                             System.out.println("\n== 🎉 HAS GANADO EL COMBATE 🎉 ==");
 
                             //RECOMPENSAS
-                            int indes = rand.nextInt(interaccion.length);
-                            String recompensaVictoria = recompensas[index];
+                            int indiceRecompensa = rand.nextInt(recompensas.length);
+                            String recompensaVictoria = recompensas[indiceRecompensa];
                             System.out.println("Has ganado una " + recompensaVictoria + " 🧙‍♂️");
-                            if (recompensaVictoria.equals("poción de vida")) {
+                            if (recompensaVictoria.equals("Poción de vida")) {
                                 pocionVida += 1;
-                            } else if (recompensaVictoria.equals("poción de magia")) {
+                            } else if (recompensaVictoria.equals("Poción magica")) {
                                 pocionMagica += 1;
-                            } else if (recompensaVictoria.equals("poción de daño")) {
+                            } else if (recompensaVictoria.equals("Poción de daño")) {
                                 pocionDaño += 1;
                             } else {
                                 pocionDañoExtremo += 1;
@@ -129,7 +128,71 @@ public class Main {
                             //VIDA
                             int vidaGanada = rand.nextInt(25) + 25;
                             puntosSalud += vidaGanada;
-                            if (puntosSalud > 100) puntosSalud=100;
+                            if (puntosSalud>100) puntosSalud=100;
+
+                            //TABERNA
+                            System.out.print("Tras un largo combate " + nombre + " ha visto una taberna. ¿Quieres entrar? ");
+                            String entrarTaberna = sc.next();
+                            if (entrarTaberna.equalsIgnoreCase("Si")) {
+                                System.out.println("== 🏪 TABERNA 🏪 ==");
+                                int objetosTaberna = rand.nextInt(recompensas.length);
+                                int objetosTaberna1 = rand.nextInt(recompensas.length);
+                                int objetosTaberna2 = rand.nextInt(recompensas.length);
+                                ;
+
+                                do {
+                                    objetosTaberna1 = rand.nextInt(recompensas.length);
+                                } while (objetosTaberna1 == objetosTaberna);
+                                do {
+                                    objetosTaberna2 = rand.nextInt(recompensas.length);
+                                } while (objetosTaberna2 == objetosTaberna || objetosTaberna2 == objetosTaberna1);
+
+                                int precio1 = rand.nextInt(5) + 5;
+                                int precio2 = rand.nextInt(5) + 5;
+                                int precio3 = rand.nextInt(5) + 5;
+
+                                System.out.println("Objetos a la venta: ");
+                                System.out.println("1. " + recompensas[objetosTaberna] + " (" + precio1 + " de oro)");
+                                System.out.println("2. " + recompensas[objetosTaberna1] + " (" + precio2 + " de oro)");
+                                System.out.println("3. " + recompensas[objetosTaberna2] + " (" + precio3 + " de oro)");
+
+                                System.out.print("¿Qué poción deseas comprar? (1, 2, o 3): ");
+                                int opcionCompra = sc.nextInt();
+
+                                int precio = 0;
+                                String objetoComprado = "";
+
+                                if (opcionCompra == 1) {
+                                    precio = precio1;
+                                    objetoComprado = recompensas[objetosTaberna];
+                                } else if (opcionCompra == 2) {
+                                    precio = precio2;
+                                    objetoComprado = recompensas[objetosTaberna1];
+                                } else if (opcionCompra == 3) {
+                                    precio = precio3;
+                                    objetoComprado = recompensas[objetosTaberna2];
+                                } else {
+                                    System.out.println("Opción no válida.");
+                                    return;
+                                }
+
+                                if (oro < precio) {
+                                    System.out.println("No tienes suficiente oro ❌");
+                                } else {
+                                    oro -= precio;
+                                    System.out.println("¡Has comprado una " + objetoComprado + "! 🧪");
+
+                                    if (objetoComprado.equals("Poción de vida")) {
+                                        pocionVida++;
+                                    } else if (objetoComprado.equals("Poción magica")) {
+                                        pocionMagica++;
+                                    } else if (objetoComprado.equals("Poción de daño")) {
+                                        pocionDaño++;
+                                    } else if (objetoComprado.equals("Poción de daño extremo")) {
+                                        pocionDañoExtremo++;
+                                    }
+                                }
+                            }
 
                             System.out.println("--------------------------------------------------------------");
                             break;
@@ -180,13 +243,15 @@ public class Main {
 
                     //ATAQUE MAGICO
                     } else if (opcion == 2) {
-
                         if (puntosMagia < 25) {
                             System.out.println("No tienes los suficientes puntos de magia para poder realizar un ataque magico");
                         } else {
                             System.out.println("Has realizado un ataque mágico y has hecho " + dañoAtaqueMagico + " de daño al " + enemigoRandom);
                             puntosMagia -= 25;
                             vidaEnemigo -= dañoAtaqueMagico;
+                            if(puntosMagia<0) {
+                                puntosMagia=0;
+                            }
                         }
 
                         //COMPROVACION MUERTE ENEMIGO --ATAQUE MAGICO-- + RECOMPENSAS
@@ -194,14 +259,14 @@ public class Main {
                             System.out.println("\n== 🎉 HAS GANADO EL COMBATE 🎉 ==");
 
                             //RECOMPENSAS
-                            int indes = rand.nextInt(interaccion.length);
-                            String recompensaVictoria = recompensas[index];
+                            int indiceRecompensa = rand.nextInt(recompensas.length);
+                            String recompensaVictoria = recompensas[indiceRecompensa];
                             System.out.println("Has ganado una " + recompensaVictoria + " 🧙‍♂️");
-                            if (recompensaVictoria.equals("poción de vida")) {
+                            if (recompensaVictoria.equals("Poción de vida")) {
                                 pocionVida += 1;
-                            } else if (recompensaVictoria.equals("poción de magia")) {
+                            } else if (recompensaVictoria.equals("Poción magica")) {
                                 pocionMagica += 1;
-                            } else if (recompensaVictoria.equals("poción de daño")) {
+                            } else if (recompensaVictoria.equals("Poción de daño")) {
                                 pocionDaño += 1;
                             } else {
                                 pocionDañoExtremo += 1;
@@ -224,23 +289,60 @@ public class Main {
                                 System.out.println("== 🏪 TABERNA 🏪 ==");
                                 int objetosTaberna = rand.nextInt(recompensas.length);
                                 int objetosTaberna1 = rand.nextInt(recompensas.length);
-                                int objetosTaberna2 = rand.nextInt(recompensas.length);;
+                                int objetosTaberna2 = rand.nextInt(recompensas.length);
+                                ;
 
-                                do { objetosTaberna1 = rand.nextInt(recompensas.length); } while(objetosTaberna1 == objetosTaberna);
-                                do { objetosTaberna2 = rand.nextInt(recompensas.length); } while(objetosTaberna2 == objetosTaberna || objetosTaberna2 == objetosTaberna1);
+                                do {
+                                    objetosTaberna1 = rand.nextInt(recompensas.length);
+                                } while (objetosTaberna1 == objetosTaberna);
+                                do {
+                                    objetosTaberna2 = rand.nextInt(recompensas.length);
+                                } while (objetosTaberna2 == objetosTaberna || objetosTaberna2 == objetosTaberna1);
 
                                 int precio1 = rand.nextInt(5) + 5;
                                 int precio2 = rand.nextInt(5) + 5;
                                 int precio3 = rand.nextInt(5) + 5;
 
-                                System.out.println("Objetos a la venta: " + recompensas[objetosTaberna] + " (" + precio1 + " de oro) | " + recompensas[objetosTaberna1] +
-                                        " (" + precio2 + " de oro) | " + recompensas[objetosTaberna2]  + " (" + precio3 + " de oro)" );
+                                System.out.println("Objetos a la venta: ");
+                                System.out.println("1. " + recompensas[objetosTaberna] + " (" + precio1 + " de oro)");
+                                System.out.println("2. " + recompensas[objetosTaberna1] + " (" + precio2 + " de oro)");
+                                System.out.println("3. " + recompensas[objetosTaberna2] + " (" + precio3 + " de oro)");
 
-                                System.out.print("¿Que poción deseas comprar? ");
-                                String compra = sc.next();
-                                if (compra.equalsIgnoreCase("Poción de vida")) {
-                                    pocionVida+=1;
-                                    oro-=6;
+                                System.out.print("¿Qué poción deseas comprar? (1, 2, o 3): ");
+                                int opcionCompra = sc.nextInt();
+
+                                int precio = 0;
+                                String objetoComprado = "";
+
+                                if (opcionCompra == 1) {
+                                    precio = precio1;
+                                    objetoComprado = recompensas[objetosTaberna];
+                                } else if (opcionCompra == 2) {
+                                    precio = precio2;
+                                    objetoComprado = recompensas[objetosTaberna1];
+                                } else if (opcionCompra == 3) {
+                                    precio = precio3;
+                                    objetoComprado = recompensas[objetosTaberna2];
+                                } else {
+                                    System.out.println("Opción no válida.");
+                                    return;
+                                }
+
+                                if (oro < precio) {
+                                    System.out.println("No tienes suficiente oro ❌");
+                                } else {
+                                    oro -= precio;
+                                    System.out.println("¡Has comprado una " + objetoComprado + "! 🧪");
+
+                                    if (objetoComprado.equals("Poción de vida")) {
+                                        pocionVida++;
+                                    } else if (objetoComprado.equals("Poción magica")) {
+                                        pocionMagica++;
+                                    } else if (objetoComprado.equals("Poción de daño")) {
+                                        pocionDaño++;
+                                    } else if (objetoComprado.equals("Poción de daño extremo")) {
+                                        pocionDañoExtremo++;
+                                    }
                                 }
                             }
 
@@ -304,6 +406,7 @@ public class Main {
                                 System.out.println("Te has bebido una pocion de vida. Tus puntos de salud han subido 25 puntos 🔋\n");
                                 puntosSalud += 25;
                                 pocionVida-=1;
+                                if (puntosSalud>100) puntosSalud=100;
                             }
 
                         } else if (consumicion == 2) {
@@ -312,6 +415,7 @@ public class Main {
                                 System.out.println("Te has bebido una pocion magica. Tus puntos mágicos han subido 25 puntos 🪄\n");
                                 puntosMagia += 25;
                                 pocionMagica-=1;
+                                if (puntosMagia>100) puntosMagia=100;
                             }
 
                         } else if (consumicion == 3) {
@@ -336,7 +440,21 @@ public class Main {
                     else if (opcion == 4) {
                         System.out.println("Te has rendido");
                         oro -= 5;
-                        break;
+                        if (oro<=0) {
+                            System.out.print("Te has quedado con 0 de oro o menos. ¿Quieres iniciar una nueva partida? (Si/No) ");
+                            String partidaNueva = sc.next();
+
+                            if (partidaNueva.equalsIgnoreCase("Si")) {
+                                seguirJuego = false;
+                                break;
+                            } else {
+                                seguirJuego = false;
+                                inicioJuego = false;
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
